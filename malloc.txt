@@ -1,0 +1,28 @@
+#include <stdio.h>
+#include<stdlib.h>
+#include <malloc.h>
+
+#define SIZE 10
+
+int main() {
+
+	int* p;
+
+	p = (int*)malloc(1);
+	if (p == NULL) {
+		fprintf(stderr, "일단 에러\n");
+		exit(1);
+	}
+
+	for (int i = 0; i < SIZE ; i++)
+		p[i] = i;
+
+
+	for (int i = 0; i < SIZE ; i++)
+		printf("%d", p[i]);
+
+
+
+	free(p);
+	return 0;
+}
