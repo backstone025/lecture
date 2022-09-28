@@ -1,0 +1,42 @@
+#include <stdio.h>
+
+typedef struct HWeight {
+
+    int Weight;   //무게
+    int Height;   //키
+
+    int ranking;
+
+
+}HWeight;
+
+
+
+
+int main(void) {
+    int n;
+    scanf("%d", &n);
+    
+    HWeight student[50];
+  
+    
+    for (int i = 0; i < n; i++) {
+        scanf("%d %d", &student[i].Weight, &student[i].Height);
+    }
+     
+    for (int j = 0; j < n; j++) {
+        student[j].ranking = 1;
+        for (int k = 0; k < n; k++) {
+
+            if (student[k].Weight > student[j].Weight && student[k].Height > student[j].Height)
+                student[j].ranking++;
+       }
+
+    }
+
+
+
+    for (int j = 0; j < n; j++)
+        printf("%d ", student[j].ranking);
+    return 0;
+}
