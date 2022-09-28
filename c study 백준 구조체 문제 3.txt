@@ -1,0 +1,53 @@
+#include <stdio.h>
+
+
+typedef struct studentsGrade{
+
+    float avg;
+    int over_avg;
+    int numStu;
+    float sum;
+
+
+
+}studentsGrade;
+
+
+int main(){
+    float k;
+    int n;
+    scanf("%d", &n);
+
+    for(int i = 0; i < n; i++) {
+        int Num;
+        scanf("%d", &Num);
+        float scores[1000];
+        studentsGrade x;
+        x.sum = 0;
+        x.numStu = Num;
+        x.over_avg = 0;
+        float avg;
+        for (int j = 0; j < Num; j++) {
+
+            scanf("%d", &scores[j]);
+            x.sum += scores[j];
+
+        }
+        x.avg = (float) x.sum / x.numStu;
+
+
+        for (int c = 0; c < Num; c++) {
+
+            if (scores[c] > x.avg)
+                x.over_avg++;
+
+        }
+
+
+        k = 100.0 * (x.over_avg / x.numStu);
+        printf("%f", k);
+    }
+
+
+    return 0;
+}
