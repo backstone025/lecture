@@ -1,0 +1,114 @@
+#include <stdio.h>
+#define N 7
+
+//deque 구조체 정의
+typedef struct{
+
+    int rear;
+    int front;
+    int data[N];
+
+}DequeType;
+
+//deque 큐 초기화 함수.
+void initDeque(DequeType* q){
+
+    q->rear = q->front = 0;
+
+}
+
+//deque 앞에서부터 화면에 출력하는 함수.
+void printDeque(DequeType *q){
+    int x = q->front;
+    int y = q->rear;
+
+
+    while(x!=y){
+
+        x = (x+1)%N;
+        printf("%d | ", q->data[x]);
+
+    }
+
+    printf("\n");
+
+
+}
+
+//뒤에 item를 삽입하는 함수.
+void add_rear(DequeType *q, int item){
+
+    if((q->rear+1) % N == q -> front){
+        printf("no more space in que...error...\n");
+        return;
+    }
+
+    q->rear = (q->rear+1)%N;
+    q->data[q->rear] = item;
+
+
+}
+
+//앞의 데이터를 삭제하고 그 값을 나타내는 함수.
+int delete_front(DequeType *q) {
+    if(q->rear == q->front){
+        printf("There are no data in que, so you can't use dequeue function...error...\n");
+        return -9813;
+    }
+
+    int item = q->data[q->front];
+    q->front = (q->front + 1)%N;
+    return item;
+}
+
+//item을 deque의 앞에 대입하는 함수.
+void add_front(DequeType *q, int item){
+    if((q->front - 1)%N == q -> rear){
+        printf("no more space for data... error...\n");
+        return;
+    }
+
+    q->data[q->front] = item;
+    q->front = (q->front - 1 + N) % N;
+
+
+}
+
+//deque 의 마지막 값을 제거하고 그 값을 나타내는 함수.
+int delete_rear(DequeType *q){
+
+    if(q->rear == q->front){
+        printf("There are no data in que, so you can't use dequeue function...error...\n");
+        return -5861;
+    }
+
+    int item = q->data[q->rear];
+    q->rear = (q->rear - 1 + N) % N;
+    return item;
+
+}
+
+
+
+
+int main() {
+ DequeType q;
+ initDeque(&q);
+ printf("add_front twice\n");
+ add_front(&q, 1);
+ add_front(&q, 2);
+ printDeque(&q);
+ printf("add_rear three times\n");
+ add_rear(&q, 3);
+ add_rear(&q, 4);
+ add_rear(&q, 5);
+ printDeque(&q);
+ printf("delete_front once\n");
+ delete_front(&q);
+ printDeque(&q);
+ printf("delete_rear twice\n");
+ delete_rear(&q);
+ delete_rear(&q);
+ printDeque(&q);
+    return 0;
+}
