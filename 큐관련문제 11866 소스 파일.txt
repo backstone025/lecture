@@ -1,0 +1,132 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct Node {
+
+    int data;
+    struct Node* next;
+
+
+
+}Node;
+
+typedef struct {
+
+    Node* head;
+    Node* tail;
+    int size;
+
+}ll;
+
+void initlink(ll* link) {
+
+
+    link->head = NULL;
+    link->tail = NULL;
+    link->size = 0;
+}
+
+
+
+
+void addLast(ll* link, int item) {
+
+    if (link->size == 0) {
+        Node* q = (Node*)malloc(sizeof(Node));
+        q->data = item;
+        q->next = q;
+        link->head = q;
+        link->tail = q;
+
+    }
+
+
+    else {
+        Node* q = (Node*)malloc(sizeof(Node));
+        q->data = item;
+        link->tail->next = q;
+        q->next = link->head;
+        link->tail = q;
+    }
+
+    link->size++;
+}
+
+
+int popFirst(ll* link) {
+
+    if (link->size == 0) {
+        printf("No node for delete..error..");
+        return -4314;
+    }
+
+
+
+    Node* q = link->head;
+    int item = q->data;
+    link->head = q->next;
+    link->tail->next = link->head;
+    link->size--;
+    return item;
+
+}
+
+
+void printlist(ll* link) {
+    Node* q = link->head;
+    printf("<%d", q->data);
+    q = q->next;
+    for (int i = 1; i < link->size; i++) {
+        printf(", %d", q->data);
+        q = q->next;
+
+    }
+    printf(">");
+
+
+}
+
+
+
+int main() {
+    int n, k;
+    scanf("%d %d", &n, &k);
+    ll* link = (ll*)malloc(sizeof(ll));
+    ll* link_2 = (ll*)malloc(sizeof(ll));
+    initlink(link);
+    initlink(link_2);
+    for (int i = 0; i < n; i++)
+        addLast(link, i + 1);
+    int item;
+    int x = 1;
+    while (link->size > 0) {
+
+        if (x % k != 0) {
+
+            item = popFirst(link);
+            addLast(link, item);
+
+
+        }
+
+        else {
+
+            item = popFirst(link);
+            addLast(link_2, item);
+
+        }
+
+
+        x++;
+
+    }
+
+
+
+    printlist(link_2);
+
+
+
+
+    return 0;
+}
