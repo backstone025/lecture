@@ -1,0 +1,253 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+
+typedef struct card{    //카드 구조체
+    
+    int shape;//1:스페이드 2: 다이아 3:하트 4:클럽
+    int num;    //1:a, 11:J, 12: Q, 13: K
+
+    struct card* next;  //패에 있을 때 다음 카드
+    
+  
+}card;
+
+typedef struct deck{    //덱 구조체
+
+card deck_card[52];     //카드 배열
+int num_of_card;        //카드 개수
+
+}deck;
+
+typedef struct hand_card{//플레이어의 패 구조체
+
+  card* head; //플레이어 패의 첫번째 카드
+  int num_of_card;  //패의 카드 개수
+  struct hand_card* next_player;
+
+
+}hand_card; 
+
+
+void print_card(card *C){//card를 풀력하는 함수
+ 
+    switch(C->shape){
+    
+    case 1: 
+        printf(" |스페이드 ");
+        break;
+    case 2:
+        printf(" |다이아 ");
+        break;
+    case 3:
+        printf(" |하트 ");
+        break;
+    case 4:
+        printf(" |클로버 ");
+        break;
+    default:
+        break;
+    }
+    
+    if(C->num == 1 || C->num == 11 || C->num == 12 || C->num == 13){
+        
+        switch(C->num){
+            case 1:
+                printf("A|");
+                break;
+            case 11: 
+                printf("J|");
+                break;
+            case 12:
+                printf("Q|");
+                break;
+            case 13:
+                printf("K|");
+                break;
+            default:
+            break;
+        }
+        
+        
+    }
+    
+    else
+        printf("%d|", C->num);
+        
+        
+    
+    
+}
+
+void make_deck(deck* D){//섞이지 않은 덱 생성
+    
+    int n = 0;
+    for(int i = 1; i <= 4; i++){
+        
+        for(int j = 1; j <= 13; j++){
+            
+            D->deck_card[n].shape = i; //카드 문양 삽입
+            D->deck_card[n].num = j; // 카드 숫자 삽입
+            D->deck_card[n].next = NULL;
+            n++;
+        }
+    }
+
+
+          D->num_of_card = 52;
+}
+
+
+void shuffle_deck(deck* D){ //덱을 섞는 함수(카드 개수는 상관없음)
+    
+    int x ,y;
+    card z;
+    for(int i = 0; i < 200; i++){
+        
+        x = rand() % D->num_of_card;
+        y = rand() % D->num_of_card;
+        
+        z = D->deck_card[x];
+        D->deck_card[x] = D->deck_card[y];
+        D->deck_card[y] = z;
+        
+        
+    }
+
+    
+    
+}
+
+void init_hand(hand_card* player){ //플레이어 패 초기화
+
+
+  player->head = NULL;
+  player->num_of_card = 0;
+  player->next_player = player;
+
+  
+}
+
+void give_hand_card(hand_card* player, deck* D){//덱의 마지막 카드를 플레이어의 패로 옮기는 함수
+
+
+D->deck_card[D->num_of_card-1].next = player->head;
+player->head = &(D->deck_card[D->num_of_card-1]);
+D->num_of_card--;
+player->num_of_card++;
+
+  
+}
+
+void print_hand(hand_card* player){ //플레이어의 패를 출력하는 함수
+
+card* p = player->head;
+
+  for(int i = 0; i < player->num_of_card; i++){
+  print_card(p);
+  p = p->next;
+     }
+     
+    printf("\n");
+}
+
+card use_card(hand_card* player){
+    int n;
+    card C;
+    card* q = player->head;
+    scanf("%d", &n);
+    
+    if(n==1){
+        C = *q;
+        player->head = player->head->next;
+        C.next = NULL;
+        player->num_of_card--;
+        return C;
+    }
+
+    
+    for(int i = 2; i < n; i++)
+        q = q->next;
+        
+        C = *(q->next);
+        q->next = q->next->next;
+        C.next = NULL;
+        player->num_of_card--;
+        
+        return C;
+
+
+}
+
+
+int main()
+{
+    srand((unsigned int)time(NULL));
+    deck D; //조커 제외
+    make_deck(&D);//덱 생성
+    
+    shuffle_deck(&D);
+    shuffle_deck(&D);   
+    
+//////////////////////////////////////////////////////////////////    
+///////////////////////////////////////////////////////////
+    int N;
+    printf("플레이어 수를 정하세요:");
+    scanf("%d", &N);
+    
+    hand_card player1, player2, player3, player4;
+    init_hand(&player1);
+    init_hand(&player2);
+    init_hand(&player3);
+    init_hand(&player4);
+    player1.next_player = &player2;
+    player2.next_player = &player3;    
+    player3.next_player = &player4;    
+    player4.next_player = &player1;
+    
+    switch(N){
+        
+        case 4:
+            for(int i = 0; i < 7; i++)
+               give_hand_card(&player4, &D);
+        case 3: 
+            for(int i = 0; i < 7; i++)
+               give_hand_card(&player3, &D);
+        case 2:
+            for(int i = 0; i < 7; i++)
+               give_hand_card(&player2, &D);            
+        case 1:
+            for(int i = 0; i < 7; i++)
+               give_hand_card(&player1, &D);
+         
+    }
+    
+    switch(N){
+        
+        case 2:
+            player2.next_player = &player1;
+            break;
+        case 3:
+            player3.next_player = &player1;
+            break;
+        case 4:
+            player4.next_player = &player1;
+            break;
+            
+        default:
+            return -1;
+        
+        
+    }
+    /////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////
+    
+    print_hand(&player1);
+    use_card(&player1);
+    print_hand(&player1);
+    use_card(&player1);
+    print_hand(&player1);    
+  
+    return 0;
+}
